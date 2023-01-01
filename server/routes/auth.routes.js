@@ -1,8 +1,10 @@
 import { Router } from 'express';
-import User from '../models/User';
+import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import { check, validationResult } from 'express-validator';
-import { jwt } from 'jsonwebtoken';
+import pkg from 'jsonwebtoken';
+const { jwt } = pkg;
+
 import 'dotenv/config';
 
 const router = new Router();
@@ -95,7 +97,7 @@ router.post(
       if (!isMatch)
         return res.status(400).json({ message: 'Invalid Credentials.' });
 
-      const userToken = jwt.sign(
+      const userToken = pkg.sign(
         {
           userId: user.id,
         },
