@@ -12,8 +12,8 @@ const router = new Router();
 // api/auth/register
 router.post(
   '/register',
-
   // validation middleware
+
   [
     check('email').exists(),
     check('password').exists(),
@@ -22,10 +22,6 @@ router.post(
       'password',
       'Password length should contain at least 6 symbols'
     ).isLength({ min: 6 }),
-    check(
-      'password',
-      'Password should contain at least one capital letter'
-    ).isLowercase(),
   ],
 
   async (req, res) => {
@@ -39,11 +35,11 @@ router.post(
         });
 
       const { email, password } = req.body;
-
+      console.log('req.body', req.body);
       // Check if user is already created in the system
       const candidate = await User.findOne({ email });
       if (candidate) {
-        return res.status(400).json({ message: 'Such user already exists.' });
+        return res.status(400).json({ message: `Such user already exists.` });
       }
 
       // Register new User
@@ -53,7 +49,7 @@ router.post(
       await user.save();
       res
         .status(201)
-        .json({ message: `User ${user.email} is successfully created.` });
+        .json({ message: `User ${user.email} is successfully created!` });
 
       //...
     } catch (err) {
@@ -70,11 +66,8 @@ router.post(
 
   // validation middleware
   [
-    check('email').exists(),
     check('password').exists(),
-    check('email', 'Please enter valid email or email!')
-      .normalizeEmail()
-      .isEmail(),
+    check('email', 'Please enter valid email or email!').isEmail(),
   ],
 
   async (req, res) => {
@@ -83,15 +76,14 @@ router.post(
 
       if (!errors.isEmpty())
         return res.status(400).json({
-          errors: errors.array(),
+          //errors: errors.array(),
           message: 'Invalid Credentials during login.',
         });
 
       const { email, password } = req.body;
 
       const user = await User.findOne({ email });
-      if (!user)
-        return res.status(400).json({ message: 'Invalid Credentials.' });
+      if (!user) return res.status(400).json({ message: 'User is not found.' });
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch)
