@@ -3,3 +3,10 @@
 .card-title {
   margin-bottom: 1.5rem !important;
 }
+
+nav .brand-logo {
+  position: initial;
+  float: right;
+  padding-inline: 20px;
+  margin: 0 auto;
+}

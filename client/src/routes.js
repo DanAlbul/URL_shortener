@@ -15,11 +15,11 @@ export const useRoutes = (isAuthenticated) => {
           <NavBar />
           <Routes>
             {/* Render component based on path where user is about to go */}
-            <Route path="/" element={<AuthPage />} />
             <Route path="/links" element={<LinksPage />} />
             <Route path="/create" element={<CreatePage />} />
             <Route path="/detail/:id" element={<DetailPage />} />
             {/* if any of the routes above does not exist - redirect to home */}
+            <Route path="*" element={<CreatePage />} />;
             <Route path="*" element={<NotFoundPage />} />;
           </Routes>
         </>

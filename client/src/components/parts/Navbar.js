@@ -1,28 +1,42 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import ShortTextIcon from '@mui/icons-material/ShortText';
-export const NavBar = ({ isAuth }) => {
+import { AuthContext } from '../../context/Auth.context';
+
+export const NavBar = () => {
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const logoutHandler = (e) => {
+    e.preventDEfault();
+    auth.logout();
+    navigate('/');
+  };
+
   return (
     <div className="navbar-fixed row">
       <nav className="nav-wrapper teal darken-3">
-        <a href="/" className="brand-logo right" style={{ marginRight: 40 }}>
-          <span style={{ margin: '0 0px', fontSize: 30 }}>s:u.r.i</span>
+        <Link
+          to="/"
+          onClick={logoutHandler}
+          className={`${auth.isAuthenticated ? 'grey darken-3 right' : 'left'}`}
+          style={{ paddingInline: 20 }}
+        >
+          {auth.isAuthenticated ? 'Logout' : 'Home'}
+        </Link>
+        <div href="/" className="brand-logo" style={{ cursor: 'default' }}>
+          <span style={{ margin: '0 0px', fontSize: 30 }}>shrink:link</span>
           <ShortTextIcon style={{ fontSize: 40, verticalAlign: 'sub' }} />
-        </a>
+        </div>
         <ul>
           <li>
-            <Link to="/" style={{ marginLeft: 40 }}>
-              Home
-            </Link>
+            <Link to="/links">{auth.isAuthenticated ? 'Links' : ''}</Link>
           </li>
           <li>
-            <Link to="/links">{isAuth ? 'Links' : ''}</Link>
+            <Link to="/create">{auth.isAuthenticated ? 'Create' : ''}</Link>
           </li>
           <li>
-            <Link to="/create">{isAuth ? 'Create' : ''}</Link>
-          </li>
-          <li>
-            <Link to="/detail/:id">{isAuth ? 'Detail' : ''}</Link>
+            <Link to="/detail/:id">{auth.isAuthenticated ? 'Detail' : ''}</Link>
           </li>
         </ul>
       </nav>

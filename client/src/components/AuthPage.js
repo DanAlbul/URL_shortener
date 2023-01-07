@@ -1,18 +1,22 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
-
+import React, { useEffect, useContext, useState } from 'react';
 import { Card } from './Card.js';
 import { useHttp } from '../hooks/http.hooks.js';
 import { useMessage } from '../hooks/message.hook.js';
+import { AuthContext } from '../context/Auth.context.js';
 
 export const AuthPage = () => {
   const message = useMessage();
   const { loading, request, error, clearError } = useHttp();
+  const auth = useContext(AuthContext);
 
   const [form, setForm] = useState({
     email: '',
     password: '',
   });
+
+  useEffect(() => {
+    window.M.updateTextFields();
+  }, []);
 
   useEffect(() => {
     console.log(error);
@@ -48,8 +52,8 @@ export const AuthPage = () => {
           ...form,
         }
       );
-      console.log('data', data);
       message(data.message, true);
+      auth.login(data.userToken, data.userId);
     } catch (err) {}
   };
 
